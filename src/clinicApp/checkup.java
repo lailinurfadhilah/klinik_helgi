@@ -1,0 +1,1090 @@
+package clinicApp;
+
+import java.awt.print.PrinterException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+
+/**
+ *
+ * @author Laili
+ */
+public class checkup extends javax.swing.JFrame {
+    
+private Connection con;
+private Statement st;
+private String sql="";
+
+private String tanggal, noreg, nama, alamat, nohp, poli, dokter, diagnosis, obat, kegunaano;                
+private int hargao, jumlaho, totalharga, itemo, jumlahtotal, bayar, kembali, kembalian;
+
+    
+    public checkup() {
+        initComponents();
+        prosestambah();
+        contabel();
+    }
+        
+    private void form_enable(){ //Agar Text Field bisa diisi
+        txtNoreg.setEnabled(true);
+        txtNama.setEnabled(true);
+        txtAlamat.setEnabled(true);
+        txtHp.setEnabled(true);
+        txtPoli.setEnabled(true);
+        txtDokter.setEnabled(true);
+        txtDiagnosis.setEnabled(true);
+        txtJasa.setEnabled(true);
+        txtKode.setEnabled(true);
+        txtNamao.setEnabled(true);
+        txtJeniso.setEnabled(true);
+        txtHargao.setEnabled(true);
+        txtTotalo.setEnabled(true);
+        txtRangkuman.setEditable(true);
+        txtJumlaho.setEnabled(true);
+        txtItem.setEnabled(true);
+        txtBiaya.setEnabled(true);
+        txtBayar.setEnabled(true);
+        txtKembalian.setEnabled(true);
+  }
+    
+    private void form_clear(){ //Untuk mengkosongkan Text Field
+        txtNoreg.setText("");
+        txtNama.setText("");
+        txtAlamat.setText("");
+        txtHp.setText("");
+        txtPoli.setText("");
+        txtDokter.setText("");
+        txtDiagnosis.setText("");
+        txtJasa.setText("");
+        txtKode.setText("");
+        txtNamao.setText("");
+        txtJeniso.setText("");
+        txtHargao.setText("");
+        txtTotalo.setText("");
+        txtJumlaho.setText("");
+        txtItem.setText("");
+        txtBiaya.setText("");
+        txtBayar.setText("");
+        txtKembalian.setText("");
+        txtRangkuman.setText("");
+      }
+    
+    private void contabel (){
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con=DriverManager.getConnection("jdbc:mysql://localhost:3306/db_klinikhelgi", "root", ""); 
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "GAGAL Terkoneksi Dengan Database\n" + e.getMessage());
+        }
+    }
+      
+    private void prosestambah(){ //Proses Tambah Obat Ke Tabel Obat di Checkup
+        try {
+        DefaultTableModel tableModel = (DefaultTableModel)gridObat.getModel();
+        String[]data = new String[4];
+        data[0] = txtNamao.getText();
+        data[1] = txtHargao.getText();
+        data[2] = txtJumlaho.getText();
+        data[3] = txtTotalo.getText();
+        tableModel.addRow(data);
+        } catch (Exception e) {
+        JOptionPane.showMessageDialog(null, "ERROR Memasukkan Data Obat \n" +e.getMessage());
+        }
+}
+    private void semuaobat(){ //untuk menampilkan obat dari tabel ke text field
+        int jumlahBaris = gridObat.getRowCount();
+        String medicine = "";
+        String obat;
+        
+        TableModel tblmodel;
+        tblmodel = gridObat.getModel();
+        for (int i=0; i<jumlahBaris; i++){ 
+            obat = String.valueOf(tblmodel.getValueAt(i, 0)); //mendapatkan nilai dari data array ke 0
+            medicine = medicine + obat + ", ";
+    }
+        txtRangkuman.setText(String.valueOf(medicine));
+    }
+    
+    private void total(){ //proses untuk menghitug semua jumlah tagihan
+        int jumlahBaris = gridObat.getRowCount(); //mendapat hitung barisan dari tabel obat
+        int jumlahtotal =0, jumlahitem=0, jumlahtagihan=0;//satuan x banyak obat; item obat; tagihan keseluruhan (obat & dokter)
+        int hargasatuan, totalharga, jasa; //satuan obat, satuan x banyak obat, jasa dokter
+        
+        TableModel tblmodel;
+        tblmodel = gridObat.getModel();
+        for (int i=0; i<jumlahBaris; i++){ //mengambil data dari tabel
+            hargasatuan = Integer.parseInt(tblmodel.getValueAt(i, 2).toString()); //harga satuan dibaris ke 2
+            jumlahitem=jumlahitem+hargasatuan;
+            
+            jasa = Integer.parseInt(txtJasa.getText());
+            totalharga = Integer.parseInt(tblmodel.getValueAt(i, 3).toString()); //harga satuan dibaris ke 3
+            jumlahtotal=jumlahtotal+totalharga;
+            
+            jumlahtagihan = jumlahtotal+jasa;
+        }
+           
+        txtBiaya.setText(String.valueOf(jumlahtagihan)); //menampilkan di variabel Biaya atau di tagihan
+        txtItem.setText(String.valueOf(jumlahitem));   //menampilkan di variabel item
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        buttonGroup1 = new javax.swing.ButtonGroup();
+        buttonGroup2 = new javax.swing.ButtonGroup();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTable1 = new javax.swing.JTable();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtJasa = new javax.swing.JTextField();
+        txtAlamat = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        txtHp = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        txtNama = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        txtHargao = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        txtTotalo = new javax.swing.JTextField();
+        jLabel19 = new javax.swing.JLabel();
+        txtJumlaho = new javax.swing.JTextField();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        gridObat = new javax.swing.JTable();
+        butTambaho = new javax.swing.JButton();
+        jLabel23 = new javax.swing.JLabel();
+        txtDokter = new javax.swing.JTextField();
+        butSimpan = new javax.swing.JButton();
+        butBatal = new javax.swing.JButton();
+        txtNamao = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        txtNoreg = new javax.swing.JTextField();
+        txtKode = new javax.swing.JTextField();
+        txtJeniso = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        txtPoli = new javax.swing.JTextField();
+        butHapus = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        txtKembalian = new javax.swing.JTextField();
+        txtItem = new javax.swing.JTextField();
+        txtBiaya = new javax.swing.JTextField();
+        txtBayar = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        txtPrint = new javax.swing.JButton();
+        txtDiagnosis = new javax.swing.JTextField();
+        butBuat = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        butKembali = new javax.swing.JButton();
+        jPanel7 = new javax.swing.JPanel();
+        jDtanggal = new com.toedter.calendar.JDateChooser();
+        txtRangkuman = new javax.swing.JTextField();
+        jPanel8 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        area = new javax.swing.JTextArea();
+
+        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTable1);
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel2.setText("Tanggal Periksa");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 150, -1, 20));
+
+        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel5.setText("No. Registrasi");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 210, -1, 20));
+
+        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel6.setText("Nama Pasien");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, -1, 20));
+
+        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel7.setText("Alamat");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 290, -1, 20));
+
+        txtJasa.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtJasa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtJasaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtJasa, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 450, 170, -1));
+
+        txtAlamat.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtAlamat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtAlamatActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtAlamat, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 290, 170, -1));
+
+        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel8.setText("No. HP");
+        jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 330, -1, 20));
+
+        txtHp.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtHp.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHpActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtHp, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 330, 170, -1));
+
+        jLabel11.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel11.setText("Poli");
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 370, 40, 20));
+
+        jLabel12.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel12.setText("Nama Dokter");
+        jPanel1.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 410, -1, 20));
+
+        txtNama.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtNama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNamaActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtNama, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 250, 170, -1));
+
+        jLabel13.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel13.setText("Jasa Dokter");
+        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 450, 70, 20));
+
+        jLabel15.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel15.setText("Harga Obat");
+        jPanel1.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 180, -1, 20));
+
+        txtHargao.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtHargao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtHargaoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtHargao, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 180, 120, -1));
+
+        jLabel16.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel16.setText("Total Harga");
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 240, -1, 20));
+
+        jLabel18.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel18.setText("Kode Obat");
+        jPanel1.add(jLabel18, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 180, -1, 20));
+
+        txtTotalo.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtTotalo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTotaloActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtTotalo, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 240, 120, -1));
+
+        jLabel19.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel19.setText("Jumlah Obat");
+        jPanel1.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(590, 210, -1, 20));
+
+        txtJumlaho.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtJumlaho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtJumlahoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtJumlaho, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 210, 70, -1));
+
+        gridObat.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        gridObat.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Nama Obat", "Harga Satuan", "Jumlah Obat", "Total Harga"
+            }
+        ));
+        jScrollPane2.setViewportView(gridObat);
+
+        jPanel1.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 320, 440, 70));
+
+        butTambaho.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        butTambaho.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/add.png"))); // NOI18N
+        butTambaho.setText(" Tambah");
+        butTambaho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butTambahoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(butTambaho, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 280, 150, 30));
+
+        jLabel23.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel23.setText("Diagnosis Pasien");
+        jPanel1.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 150, -1, 20));
+
+        txtDokter.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtDokter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDokterActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtDokter, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 410, 170, -1));
+
+        butSimpan.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        butSimpan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/save.png"))); // NOI18N
+        butSimpan.setText(" Simpan");
+        butSimpan.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butSimpanActionPerformed(evt);
+            }
+        });
+        jPanel1.add(butSimpan, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 520, 120, 30));
+
+        butBatal.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        butBatal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/reset.png"))); // NOI18N
+        butBatal.setText(" Reset");
+        butBatal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butBatalActionPerformed(evt);
+            }
+        });
+        jPanel1.add(butBatal, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 520, 120, 30));
+
+        txtNamao.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtNamao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNamaoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtNamao, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 210, 120, -1));
+
+        jLabel20.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel20.setText("Kegunaan Obat");
+        jPanel1.add(jLabel20, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 240, -1, 20));
+
+        txtNoreg.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtNoreg.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNoregActionPerformed(evt);
+            }
+        });
+        txtNoreg.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtNoregKeyPressed(evt);
+            }
+        });
+        jPanel1.add(txtNoreg, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 210, 170, -1));
+
+        txtKode.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtKode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtKodeActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtKode, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 180, 70, -1));
+
+        txtJeniso.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtJeniso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtJenisoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtJeniso, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 240, 120, -1));
+
+        jLabel21.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel21.setText("Nama Obat");
+        jPanel1.add(jLabel21, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 210, -1, 20));
+
+        txtPoli.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtPoli.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPoliActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtPoli, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 370, 170, -1));
+
+        butHapus.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        butHapus.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/delete.png"))); // NOI18N
+        butHapus.setText(" Hapus");
+        butHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butHapusActionPerformed(evt);
+            }
+        });
+        jPanel1.add(butHapus, new org.netbeans.lib.awtextra.AbsoluteConstraints(640, 280, 150, -1));
+
+        jLabel9.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel9.setText("Kembalian");
+        jPanel1.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 470, -1, 20));
+
+        jLabel10.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel10.setText("Item Obat");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 440, -1, 20));
+
+        txtKembalian.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        jPanel1.add(txtKembalian, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 470, 140, -1));
+
+        txtItem.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        jPanel1.add(txtItem, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 440, 50, -1));
+
+        txtBiaya.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        jPanel1.add(txtBiaya, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 470, 130, -1));
+
+        txtBayar.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtBayar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBayarActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtBayar, new org.netbeans.lib.awtextra.AbsoluteConstraints(650, 440, 140, -1));
+
+        jLabel17.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel17.setText("Total Bayar");
+        jPanel1.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 440, -1, 20));
+
+        jLabel22.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        jLabel22.setText("Total Biaya");
+        jPanel1.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 470, -1, 20));
+
+        txtPrint.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        txtPrint.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/printer.png"))); // NOI18N
+        txtPrint.setText(" Print Nota");
+        txtPrint.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrintActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtPrint, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 520, 120, 30));
+
+        txtDiagnosis.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtDiagnosis.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDiagnosisActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtDiagnosis, new org.netbeans.lib.awtextra.AbsoluteConstraints(450, 150, 340, -1));
+
+        butBuat.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        butBuat.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/nota.png"))); // NOI18N
+        butBuat.setText(" Buat Nota");
+        butBuat.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butBuatActionPerformed(evt);
+            }
+        });
+        jPanel1.add(butBuat, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 520, 120, 30));
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel2.setBackground(new java.awt.Color(0, 0, 204));
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1120, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+
+        jPanel3.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 1120, 10));
+
+        jPanel4.setBackground(new java.awt.Color(0, 0, 204));
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1120, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+
+        jPanel3.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1120, 10));
+
+        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
+        jLabel1.setText("Klinik Helgi");
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 20, -1, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/Modern Healthcare Clinic Logodj.png"))); // NOI18N
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 10, -1, -1));
+
+        jPanel5.setBackground(new java.awt.Color(0, 0, 204));
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 90, Short.MAX_VALUE)
+        );
+
+        jPanel3.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 10, 90));
+
+        jPanel6.setBackground(new java.awt.Color(0, 0, 204));
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 90, Short.MAX_VALUE)
+        );
+
+        jPanel3.add(jPanel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(1110, 10, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Cambria", 2, 14)); // NOI18N
+        jLabel4.setText("Mitra Pelayanan Kesehatan Yang Menjamin Kepuasan Pasien");
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 70, -1, -1));
+
+        butKembali.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
+        butKembali.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/back.png"))); // NOI18N
+        butKembali.setText(" Kembali");
+        butKembali.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                butKembaliActionPerformed(evt);
+            }
+        });
+        jPanel3.add(butKembali, new org.netbeans.lib.awtextra.AbsoluteConstraints(970, 40, 110, 30));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1120, -1));
+
+        jPanel7.setBackground(new java.awt.Color(204, 204, 255));
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1120, Short.MAX_VALUE)
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 10, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 120, 1120, 10));
+        jPanel1.add(jDtanggal, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 150, 170, -1));
+
+        txtRangkuman.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
+        txtRangkuman.setText("Nama Semua Obat");
+        txtRangkuman.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtRangkumanActionPerformed(evt);
+            }
+        });
+        jPanel1.add(txtRangkuman, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 400, 440, 30));
+
+        jPanel8.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel8.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "NOTA", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Times New Roman", 0, 10))); // NOI18N
+        jPanel8.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        area.setColumns(20);
+        area.setFont(new java.awt.Font("Lucida Fax", 0, 10)); // NOI18N
+        area.setRows(5);
+        jScrollPane4.setViewportView(area);
+
+        jPanel8.add(jScrollPane4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 280, 400));
+
+        jPanel1.add(jPanel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 140, 300, 430));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1120, 580));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void txtJasaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJasaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtJasaActionPerformed
+
+    private void txtAlamatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtAlamatActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtAlamatActionPerformed
+
+    private void txtNamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaActionPerformed
+        try { 
+            String nama = txtNama.getText();
+            st = con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM tabel_pasien where nama_pasien like '"+nama+"%'");
+            if(rs.next())
+            {
+                txtNoreg.setText(rs.getString(1));
+                txtNama.setText(rs.getString(2));
+                txtAlamat.setText(rs.getString(3));
+                txtHp.setText(rs.getString(7));
+            }
+            else{
+                txtNoreg.setText(rs.getString(""));
+                txtAlamat.setText(rs.getString(""));
+                txtHp.setText(rs.getString(""));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Nama Pasien BELUM TERDAFTAR");
+        }
+    }//GEN-LAST:event_txtNamaActionPerformed
+
+    private void txtTotaloActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotaloActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTotaloActionPerformed
+
+    private void txtDokterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDokterActionPerformed
+        try {
+            String dokter = txtDokter.getText();;
+            st=con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM tabel_dokter where nama_dokter like '"+dokter+"%'");
+            if(rs.next())
+            {
+                txtPoli.setText(rs.getString(1));
+                txtDokter.setText(rs.getString(2));
+                txtJasa.setText(rs.getString(5));
+            }
+            else{
+                txtPoli.setText(rs.getString(""));
+                txtJasa.setText(rs.getString(""));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Nama Dokter TIDAK DITEMUKAN");
+        }
+    }//GEN-LAST:event_txtDokterActionPerformed
+
+    private void butKembaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butKembaliActionPerformed
+        new beranda().show();
+        this.dispose();
+    }//GEN-LAST:event_butKembaliActionPerformed
+
+    private void txtHargaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHargaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtHargaoActionPerformed
+
+    private void txtJumlahoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJumlahoActionPerformed
+        int hargaobat, jumlahobat, jumlahtotal;
+        hargaobat =Integer.parseInt(txtHargao.getText());
+        jumlahobat=Integer.parseInt(txtJumlaho.getText());
+        jumlahtotal=hargaobat*jumlahobat;
+        txtTotalo.setText(String.valueOf(jumlahtotal));
+    }//GEN-LAST:event_txtJumlahoActionPerformed
+
+    private void butSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butSimpanActionPerformed
+        noreg=String.valueOf(txtNoreg.getText());
+        SimpleDateFormat format =new SimpleDateFormat("yyyy-MM-dd");
+        tanggal=format.format(jDtanggal.getDate());
+        nama=String.valueOf(txtNama.getText());
+        alamat=String.valueOf(txtAlamat.getText());
+        nohp=String.valueOf(txtHp.getText());
+        
+        poli=String.valueOf(txtPoli.getText());
+        dokter=String.valueOf(txtDokter.getText());
+        diagnosis = String.valueOf(txtDiagnosis.getText());
+        
+        obat=String.valueOf(txtRangkuman.getText());
+        
+        hargao=Integer.parseInt(txtHargao.getText());
+        jumlaho=Integer.parseInt(txtJumlaho.getText());
+        totalharga=Integer.parseInt(txtTotalo.getText());
+        itemo=Integer.parseInt(txtItem.getText());
+        jumlahtotal=Integer.parseInt(txtBiaya.getText());
+        bayar=Integer.parseInt(txtBayar.getText());
+        kembalian=Integer.parseInt(txtKembalian.getText());
+        try {
+            sql="INSERT INTO tabel_checkup(no_reg, "
+            + "tanggal_periksa, "
+            + "nama_pasien, "
+            + "alamat_pasien, "
+            + "no_hp, "
+            + "nama_poli, "
+            + "nama_dokter, "
+            + "diagnosis, " //jasa dokter tdk dimasukkan
+            + "nama_obat, "
+            + "harga_obat,"
+            + "jumlah_obat,"
+            + "total_harga,"
+            + "jumlah_item,"
+            + "jumlah_total,"
+            + "bayar,"
+            + "kembalian)VALUES"
+            + "('"+ noreg +"',"
+            + "'"+ tanggal +"',"
+            + "'"+ nama +"',"
+            + "'"+ alamat +"',"
+            + "'"+ nohp +"',"
+            + "'"+ poli +"',"
+            + "'"+ dokter +"',"
+            + "'"+ diagnosis +"',"
+            + "'"+ obat +"',"
+            + "'"+ hargao +"',"
+            + "'"+ jumlaho +"',"
+            + "'"+ totalharga +"',"
+            + "'"+ itemo +"',"
+            + "'"+ jumlahtotal +"',"
+            + "'"+ bayar +"',"        
+            + "'"+ kembalian +"')";
+            st=con.createStatement();
+            st.execute(sql);
+            JOptionPane.showMessageDialog(null,"Data BERHASIL DISIMPAN");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Data GAGAL DISIMPAN \n"+e.getMessage());
+        }
+    }//GEN-LAST:event_butSimpanActionPerformed
+
+    private void txtHpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtHpActionPerformed
+       try {
+            String nohp = txtHp.getText();
+            st=con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM tabel_pasien where no_hp like '"+nohp+"%'");
+            if(rs.next())
+            {
+                txtNoreg.setText(rs.getString(1));
+                txtNama.setText(rs.getString(2));
+                txtAlamat.setText(rs.getString(3));
+                txtHp.setText(rs.getString(7));
+            }
+            else{
+                txtNoreg.setText(rs.getString(""));
+                txtAlamat.setText(rs.getString(""));
+                txtNama.setText(rs.getString(""));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Nomor Telepon BELUM TERDAFTAR");
+        } 
+    }//GEN-LAST:event_txtHpActionPerformed
+
+    private void txtNamaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNamaoActionPerformed
+        try { //mencari dari nama obat
+            String namao = txtNamao.getText();
+            st=con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM tabel_obat where nama_obat like '"+namao+"%'");
+            if(rs.next())
+            {
+                txtKode.setText(rs.getString(1));
+                txtNamao.setText(rs.getString(2));
+                txtJeniso.setText(rs.getString(3));
+                txtHargao.setText(rs.getString(4));
+            }
+            else{
+                txtKode.setText(rs.getString(""));
+                txtJeniso.setText(rs.getString(""));
+                txtHargao.setText(rs.getString(""));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Nama Obat TIDAK DITEMUKAN");
+        }
+    }//GEN-LAST:event_txtNamaoActionPerformed
+
+    private void butTambahoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butTambahoActionPerformed
+        prosestambah();
+        total();
+        semuaobat();
+    }//GEN-LAST:event_butTambahoActionPerformed
+
+    private void txtNoregActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNoregActionPerformed
+        try {
+            String noreg = txtNoreg.getText();
+            st=con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM tabel_pasien where no_reg like '"+noreg+"%'");
+            if(rs.next())
+            {
+                txtNoreg.setText(rs.getString(1));
+                txtNama.setText(rs.getString(2));
+                txtAlamat.setText(rs.getString(3));
+                txtHp.setText(rs.getString(7));
+            }
+            else{
+                txtNama.setText(rs.getString(""));
+                txtAlamat.setText(rs.getString(""));
+                txtHp.setText(rs.getString(""));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Nomor Registrasi BELUM TERDAFTAR");
+        }
+    }//GEN-LAST:event_txtNoregActionPerformed
+
+    private void txtKodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKodeActionPerformed
+        try {
+            String kode = txtKode.getText();
+            st=con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM tabel_obat where kode_obat like '"+kode+"%'");
+            if(rs.next())
+            {
+                txtKode.setText(rs.getString(1));
+                txtNamao.setText(rs.getString(2));
+                txtJeniso.setText(rs.getString(3));
+                txtHargao.setText(rs.getString(4));
+            }
+            else{
+                txtNamao.setText(rs.getString(""));
+                txtJeniso.setText(rs.getString(""));
+                txtHargao.setText(rs.getString(""));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Kode Obat BELUM TERDAFTAR");
+        }
+    }//GEN-LAST:event_txtKodeActionPerformed
+
+    private void txtJenisoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJenisoActionPerformed
+        try {
+            String jeniso = txtJeniso.getText();
+            st=con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM tabel_obat WHERE jenis_obat like '"+jeniso+"%'");
+            if(rs.next())
+            {
+                txtKode.setText(rs.getString(1));
+                txtNamao.setText(rs.getString(2));
+                txtJeniso.setText(rs.getString(3));
+                txtHargao.setText(rs.getString(4));
+            }
+            else{
+                txtKode.setText(rs.getString(""));
+                txtNamao.setText(rs.getString(""));
+                txtHargao.setText(rs.getString(""));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Kegunaan Obat TIDAK DITEMUKAN");
+        }
+    }//GEN-LAST:event_txtJenisoActionPerformed
+
+    private void txtPoliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPoliActionPerformed
+        try {
+            String poli = txtPoli.getText();
+            st=con.createStatement();
+            ResultSet rs = st.executeQuery("SELECT * FROM tabel_dokter where nama_poli like '"+poli+"%'");
+            if(rs.next())
+            {
+                txtPoli.setText(rs.getString(1));
+                txtDokter.setText(rs.getString(2));
+                txtJasa.setText(rs.getString(5));
+            }
+            else{
+                txtDokter.setText(rs.getString(""));
+                txtJasa.setText(rs.getString(""));
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Nama Poli TIDAK DITEMUKAN");
+        }
+    }//GEN-LAST:event_txtPoliActionPerformed
+
+    private void butHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butHapusActionPerformed
+        DefaultTableModel model = (DefaultTableModel) gridObat.getModel();
+        int row = gridObat.getSelectedRow();
+            if(row>=0){
+                int oke=JOptionPane.showConfirmDialog(null,"Hapus?","Konfirmasi", JOptionPane.YES_NO_OPTION);
+                if(oke==0){
+                    model.removeRow(row);
+                }
+            }
+    }//GEN-LAST:event_butHapusActionPerformed
+
+    private void txtNoregKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNoregKeyPressed
+        
+    }//GEN-LAST:event_txtNoregKeyPressed
+
+    private void butBatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butBatalActionPerformed
+        form_clear(); //ini button reset
+        form_enable();
+        butTambaho.setEnabled(true);
+        butSimpan.setEnabled(true);
+        txtNoreg.requestFocus();
+        txtNoreg.setEnabled(true);
+        area.setText("");
+    }//GEN-LAST:event_butBatalActionPerformed
+
+    private void txtBayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBayarActionPerformed
+        jumlahtotal=Integer.parseInt(txtBiaya.getText());
+        bayar=Integer.parseInt(txtBayar.getText());
+        kembali=bayar-jumlahtotal;
+        txtKembalian.setText(String.valueOf(kembali));
+    }//GEN-LAST:event_txtBayarActionPerformed
+
+    private void txtPrintActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrintActionPerformed
+    try {
+        area.print();
+    } catch (PrinterException ex) {
+        JOptionPane.showMessageDialog(null, "Printer ERORR!");
+    }
+    }//GEN-LAST:event_txtPrintActionPerformed
+
+    private void txtDiagnosisActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDiagnosisActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDiagnosisActionPerformed
+
+    private void butBuatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_butBuatActionPerformed
+        SimpleDateFormat format =new SimpleDateFormat("EEE, d MMM yyyy     HH:mm:ss");
+   
+        area.setText("     *********************************************     \n");
+        area.setText(area.getText()+"                     NOTA KLINIK HELGI                 \n");
+        area.setText(area.getText()+"     *********************************************     \n");
+        area.setText(area.getText()+" \n");
+        area.setText(area.getText()+ format.format(jDtanggal.getDate())+ " WIB" + "\n");
+        area.setText(area.getText()+" \n");
+        area.setText(area.getText()+" \n");
+        area.setText(area.getText()+ "No. Reg            "+" : "+ txtNoreg.getText()+"\n");
+        area.setText(area.getText()+ "Nama Pasien    "+" : "+ txtNama.getText()+"\n");
+        area.setText(area.getText()+ "Alamat             "+" : "+ txtAlamat.getText()+"\n");
+        area.setText(area.getText()+ "No. Hp             "+" : "+ txtHp.getText()+"\n");
+        area.setText(area.getText()+" \n");
+        area.setText(area.getText()+ "Poli                   "+" : "+ txtPoli.getText()+"\n");
+        area.setText(area.getText()+ "Nama Dokter     "+" : "+ txtDokter.getText()+"\n");
+        area.setText(area.getText()+" \n");
+        area.setText(area.getText()+ "Diagnosis         "+" : "+ txtDiagnosis.getText()+"\n");
+        area.setText(area.getText()+ "Obat                 "+" : "+ txtRangkuman.getText()+"\n");
+        area.setText(area.getText()+ "Item Obat         "+" : "+ txtItem.getText()+"\n");
+        area.setText(area.getText()+" \n");
+        area.setText(area.getText()+ "Total Biaya       "+" : "+ txtBiaya.getText()+"\n");
+        area.setText(area.getText()+ "Bayar               "+" : "+ txtBayar.getText()+"\n");
+        area.setText(area.getText()+ "Kembalian        "+" : "+ txtKembalian.getText()+"\n");
+        area.setText(area.getText()+" \n");
+        area.setText(area.getText()+ "Terima Kasih, Semoga Lekas Sembuh:) \n");
+    }//GEN-LAST:event_butBuatActionPerformed
+
+    private void txtRangkumanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtRangkumanActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtRangkumanActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(checkup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(checkup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(checkup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(checkup.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new checkup().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextArea area;
+    private javax.swing.JButton butBatal;
+    private javax.swing.JButton butBuat;
+    private javax.swing.JButton butHapus;
+    private javax.swing.JButton butKembali;
+    private javax.swing.JButton butSimpan;
+    private javax.swing.JButton butTambaho;
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.ButtonGroup buttonGroup2;
+    private javax.swing.JTable gridObat;
+    private com.toedter.calendar.JDateChooser jDtanggal;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JPanel jPanel8;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JTable jTable1;
+    private javax.swing.JTextField txtAlamat;
+    private javax.swing.JTextField txtBayar;
+    private javax.swing.JTextField txtBiaya;
+    private javax.swing.JTextField txtDiagnosis;
+    private javax.swing.JTextField txtDokter;
+    private javax.swing.JTextField txtHargao;
+    private javax.swing.JTextField txtHp;
+    private javax.swing.JTextField txtItem;
+    private javax.swing.JTextField txtJasa;
+    private javax.swing.JTextField txtJeniso;
+    private javax.swing.JTextField txtJumlaho;
+    private javax.swing.JTextField txtKembalian;
+    private javax.swing.JTextField txtKode;
+    private javax.swing.JTextField txtNama;
+    private javax.swing.JTextField txtNamao;
+    private javax.swing.JTextField txtNoreg;
+    private javax.swing.JTextField txtPoli;
+    private javax.swing.JButton txtPrint;
+    private javax.swing.JTextField txtRangkuman;
+    private javax.swing.JTextField txtTotalo;
+    // End of variables declaration//GEN-END:variables
+
+}
